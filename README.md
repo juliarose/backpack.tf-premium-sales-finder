@@ -8,7 +8,7 @@ Used for quickly scanning items to find recent sales.
 
 ## Installation
 1. Ensure that you have either Tampermonkey or Greasemonkey installed.
-2. Download the script [`backpack.tf-historical-comparison.user.js`](backpack.tf-historical-comparison.user.js?raw=true).
+2. Download the script [`backpacktf-premium-sales-finder.user.js`](backpacktf-premium-sales-finder.user.js?raw=true).
 3. Confirm that you want to install the script.
 4. The script should now be installed and ready to use.
 
