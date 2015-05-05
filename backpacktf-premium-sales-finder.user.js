@@ -4,7 +4,7 @@
 // @author      Julia
 // @description Find recent sales for those hats :3
 // @include     /https?:\/\/backpack\.tf\/premium\/search.*/
-// @version     1.5a
+// @version     1.0.0
 // @grant       none
 // ==/UserScript==
 
