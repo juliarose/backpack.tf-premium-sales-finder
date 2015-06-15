@@ -4,7 +4,7 @@
 // @author      Julia
 // @description Find recent sales for those hats :3
 // @include     /https?:\/\/backpack\.tf\/premium\/search.*/
-// @version     1.0.0
+// @version     1.1.0
 // @grant       none
 // ==/UserScript==
 
@@ -12,12 +12,12 @@ var idcol = 0;
 
 _ready = function() {
     var panel = $('#page-content .panel').last(),
-        checkSales = $('<a href="javascript:void(0)">Check sales for each item</a>');
+        checkSales = $('<a href="javascript:void(0)">Check exchanges for each item</a>');
     
     panel.find('table tr').each(function() {
         if ($(this).find('td').length) {
             var label = $('<a href="javascript:void(0)" class="check-sale"><span class="label label-info">Check</span></a>'),
-                td = $('<td class="sale" style="width:100px"/>').append(label);
+                td = $('<td class="sale" style="width:120px"/>').append(label);
             
             $(this).append(td);
             
@@ -31,7 +31,7 @@ _ready = function() {
                 }
             });
             
-            var th = $('<th>Last Sale</th>');
+            var th = $('<th>Last Exchanged</th>');
             
             $(this).append(th);
         }
@@ -87,7 +87,8 @@ _checkHistory = function(data, label) {
     var itemidcol=0,lastseencol=0,ownercol=0,
         previousOwner,previousDate,now=new Date(),
         recentsale=false,hasSales=false,difference,days,al=$(data).find('.alert-danger'),
-        duped = al.length && al.text().indexOf('duplicate') > -1;
+        duped = al.length && al.text().indexOf('duplicate') > -1,
+        gifted = $(data).find('.item-singular .gifted-item').length > 0;
     
     $(data).find('.row').last().find('table tr').each(function() {
         if ($(this).find('td').length) {
@@ -141,7 +142,11 @@ _checkHistory = function(data, label) {
             text += '*';
         }
         
-        result.text(text);
+        if (gifted) {
+            text += '&#176;';
+        }
+        
+        result.html(text);
         
         if (days <= 60) {
             labelClass = 'label-success';

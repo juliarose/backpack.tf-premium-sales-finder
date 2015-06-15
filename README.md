@@ -23,4 +23,6 @@ Scanning for recent sales must be done manually. You can either click the "Check
 
 Green indicates the sale occurred in the last 60 days (very recent). Yellow indiciates between 60 and 90 days (recent). Red indicates the last sale occurred more than 90 days ago or the item has never been exchanged.
 
-Occasionally an asterisk (*) will be aside the number of days. This means the item is duplicated and the number of days may be not accurate. Check with caution.
+Occasionally an asterisk (*) will appear beside the number of days. This means the item is duplicated. Additionally, the number of days may be not accurate. Check with caution.
+
+If a degree symbol appears (°) this means the item is gifted.
