@@ -14,11 +14,13 @@ Used for quickly scanning items to find recent sales.
 
 ## Updates
 * 1.0.0 - May 4th, 2015 - Initial Release
-* 1.1.0 - Undocumented
+* 1.1.0 - Jun 15, 2015
+   * Changed "Sales" to "Exchanges".
+   * Added gifted symbol.
 * 1.2.0 - August 25th, 2015
-   * Updated to adapt newer look
-   * Items in original state are now displayed as "none" on load
-   * Premium pages with no results appear as they normally would
+   * Updated to adapt newer look.
+   * Items in original state are now displayed as "none" on load.
+   * Premium pages with no results appear as they normally would.
 
 ## Overview
 
