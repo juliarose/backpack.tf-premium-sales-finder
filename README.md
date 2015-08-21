@@ -14,10 +14,15 @@ Used for quickly scanning items to find recent sales.
 
 ## Updates
 * 1.0.0 - May 4th, 2015 - Initial Release
+* 1.1.0 - Undocumented
+* 1.2.0 - August 25th, 2015
+   * Updated to adapt newer look
+   * Items in original state are now displayed as "none" on load
+   * Premium pages with no results appear as they normally would
 
 ## Overview
 
-![premium](/images/premium-showstopper-i-see-you.png?raw=true)
+![premium](/images/premium-purple-energy-trophy-belt.png?raw=true)
 
 Scanning for recent sales must be done manually. You can either click the "Check" label to check an item individually, or use the "Check sales for each item" shortcut in the upper right corner.
 

@@ -4,71 +4,77 @@
 // @author      Julia
 // @description Find recent sales for those hats :3
 // @include     /https?:\/\/backpack\.tf\/premium\/search.*/
-// @version     1.1.0
+// @version     1.2.0
 // @grant       none
 // ==/UserScript==
 
-var idcol = 0;
+var idcol = 0, originalcol = 1;
 
 _ready = function() {
-    var panel = $('#page-content .panel').last(),
-        checkSales = $('<a href="javascript:void(0)">Check exchanges for each item</a>');
+    var $panel = $('#page-content .panel').last(),
+        $danger = $panel.find('.label-danger'),
+        $pullRight = $panel.find('.panel-heading .pull-right'),
+        $checkSales = $('<button class="btn btn-panel btn-primary" id="show-markdown-modal"><i class="fa fa-list-ul"></i> Check exchanges</button>');
     
-    panel.find('table tr').each(function() {
-        if ($(this).find('td').length) {
-            var label = $('<a href="javascript:void(0)" class="check-sale"><span class="label label-info">Check</span></a>'),
-                td = $('<td class="sale" style="width:120px"/>').append(label);
-            
-            $(this).append(td);
-            
-            label.click(function() {
-                _labelClicked($(this));
-            });
-        } else if ($(this).find('th').length) {
-            $(this).find('th').each(function() {
-                if ($(this).text() == 'ItemID') {
-                    idcol = $(this).index();
+    if ($danger.text().indexOf('No results found.') == -1) {
+        $panel.find('table tr').each(function() {
+            var $this = $(this),
+                $th = $this.find('th'),
+                $td = $this.find('td'),
+                $original = $td.eq(originalcol);
+            if ($td.length) {
+                var $label, $sale = $('<td class="sale" style="width:120px"/>');
+                
+                if ($original.text() === 'Yes') {
+                    $label = $('<span class="label label-danger">None</span>')
+                } else {
+                    $label = $('<a href="javascript:void(0)" class="check-sale"><span class="label label-info">Check</span></a>')
                 }
-            });
-            
-            var th = $('<th>Last Exchanged</th>');
-            
-            $(this).append(th);
-        }
-    });
-    
-    panel.find('.panel-heading .pull-right a').replaceWith(checkSales);
-    
-    checkSales.click(function() {
-        $(this).remove();
+                
+                $sale.append($label);
+                $this.append($sale);
+                $label.click(function() {
+                    _labelClicked($(this));
+                });
+            } else if ($th.length) {
+                $th.each(function() {
+                    if ($this.text() == 'ItemID') idcol = $this.index();
+                });
+                
+                var $lastExchange = $('<th>Last Exchanged</th>');
+                $this.append($lastExchange);
+            }
+        });
         
-        _checkSales();
-    });
+        $pullRight.find('a').replaceWith($checkSales);
+        $checkSales.click(function() {
+            $(this).remove();
+            _checkSales();
+        });
+    }
 }
 
 _checkSales = function() {
     var n = 0, gap = 300;
     
     $('.check-sale').each(function() {
-        var e = this;
+        var $this = $(this);
         
         setTimeout(function() {
-            $(e).trigger('click');
+            $this.trigger('click');
         }, n);
         
         n += gap;
     });
 }
 
-_labelClicked = function(label) {
-    var id = label.closest('tr').find('td').eq(idcol).text();
+_labelClicked = function($label) {
+    var $tr = $label.closest('tr'), id = $tr.find('td').eq(idcol).text();
     
-    if (id) {
-        _ajax(id, label);
-    }
+    if (id) _ajax(id, $label);
 }
 
-_ajax = function(id, label) {
+_ajax = function(id, $label) {
     $.ajax({
         type: 'GET',
         dataType: 'html',
@@ -77,13 +83,14 @@ _ajax = function(id, label) {
             var doc = document.implementation.createHTMLDocument('item'); doc.documentElement.innerHTML = response;
             var data = $(doc).find('#page-content');
             
-            _checkHistory(data, label);
+            _checkHistory(data, $label);
         }, error: function (xhr, ajaxOptions, thrownError) {
+            // page failed to load
         }
     });
 }
 
-_checkHistory = function(data, label) {
+_checkHistory = function(data, $label) {
     var itemidcol=0,lastseencol=0,ownercol=0,
         previousOwner,previousDate,now=new Date(),
         recentsale=false,hasSales=false,difference,days,al=$(data).find('.alert-danger'),
@@ -91,9 +98,11 @@ _checkHistory = function(data, label) {
         gifted = $(data).find('.item-singular .gifted-item').length > 0;
     
     $(data).find('.row').last().find('table tr').each(function() {
-        if ($(this).find('td').length) {
-            var lastseen = $(this).find('td').eq(lastseencol),
-                owner = $(this).find('td').eq(ownercol).text(),
+        var $this = $(this);
+        
+        if ($this.find('td').length) {
+            var lastseen = $this.find('td').eq(lastseencol),
+                owner = $this.find('td').eq(ownercol).text(),
                 lastseendate = new Date(lastseen.text()),
                 lastseenrawdate = lastseen.text();
                 hasSales = previousOwner && previousOwner != owner;
@@ -106,8 +115,8 @@ _checkHistory = function(data, label) {
             
             previousDate = lastseendate;
             previousOwner = owner;
-        } else if ($(this).find('th').length) {
-            $(this).find('th').each(function() {
+        } else if ($this.find('th').length) {
+            $this.find('th').each(function() {
                 switch ($(this).text()) {
                     case 'Item ID':
                         itemidcol = $(this).index();
@@ -125,28 +134,22 @@ _checkHistory = function(data, label) {
         return !hasSales;
     });
     
-    var result = $('<span class="label"/>'), labelClass = 'label-danger';
+    var $result = $('<span class="label"/>'),
+        labelClass = 'label-danger',
+        text = '',
+        da = days == 1 ? 'day' : 'days';
     
     if (days || days == 0) {
-        var text;
-        
         if (days == 0) {
-            text = 'Today';
+            text += 'Today';
         } else {
-            var da = days == 1 ? 'day' : 'days';
-            
-            text = days + ' ' + da + ' ago';
+            text += days + ' ' + da + ' ago';
         }
         
-        if (duped) {
-            text += '*';
-        }
+        if (duped)  text += '*';
+        if (gifted) text += '&#176;';
         
-        if (gifted) {
-            text += '&#176;';
-        }
-        
-        result.html(text);
+        $result.html(text);
         
         if (days <= 60) {
             labelClass = 'label-success';
@@ -154,12 +157,11 @@ _checkHistory = function(data, label) {
             labelClass = 'label-warning';
         }
     } else {
-        result.text('None');
+        $result.text('None');
     }
     
-    result.addClass(labelClass);
-    
-    label.replaceWith(result);
+    $result.addClass(labelClass);
+    $label.replaceWith($result);
 }
 
 _dayDifference = function(d1, d2) {
@@ -169,7 +171,7 @@ _dayDifference = function(d1, d2) {
 }
 
 _itemURL = function(id) {
-    return window.location.protocol + '//' + window.location.hostname + '/item/' + (id || '');
+    return window.location.protocol + '//' + window.location.hostname + '/item/' + id;
 }
 
 $(document).ready(function() {
