@@ -4,13 +4,15 @@
 // @author      Julia
 // @description Find recent sales for those hats :3
 // @include     /https?:\/\/backpack\.tf\/premium\/search.*/
-// @version     1.2.0
+// @version     1.2.1
 // @grant       none
+// @updateURL   https://github.com/juliarose/backpack.tf-premium-sales-finder/raw/master/backpacktf-premium-sales-finder.meta.js
+// @downloadURL https://github.com/juliarose/backpack.tf-premium-sales-finder/raw/master/backpacktf-premium-sales-finder.user.js
 // ==/UserScript==
 
 var idcol = 0, originalcol = 1;
 
-_ready = function() {
+premiumRecentSalesReady = function() {
     var $panel = $('#page-content .panel').last(),
         $danger = $panel.find('.label-danger'),
         $pullRight = $panel.find('.panel-heading .pull-right'),
@@ -49,12 +51,12 @@ _ready = function() {
         $pullRight.find('a').replaceWith($checkSales);
         $checkSales.click(function() {
             $(this).remove();
-            _checkSales();
+            checkSales();
         });
     }
 }
 
-_checkSales = function() {
+checkSales = function() {
     var n = 0, gap = 300;
     
     $('.check-sale').each(function() {
@@ -68,29 +70,29 @@ _checkSales = function() {
     });
 }
 
-_labelClicked = function($label) {
+labelClicked = function($label) {
     var $tr = $label.closest('tr'), id = $tr.find('td').eq(idcol).text();
     
-    if (id) _ajax(id, $label);
+    if (id) ajax(id, $label);
 }
 
-_ajax = function(id, $label) {
+ajax = function(id, $label) {
     $.ajax({
         type: 'GET',
         dataType: 'html',
-        url: _itemURL(id),
+        url: itemURL(id),
         success: function (response) {
             var doc = document.implementation.createHTMLDocument('item'); doc.documentElement.innerHTML = response;
             var data = $(doc).find('#page-content');
             
-            _checkHistory(data, $label);
+            checkHistory(data, $label);
         }, error: function (xhr, ajaxOptions, thrownError) {
             // page failed to load
         }
     });
 }
 
-_checkHistory = function(data, $label) {
+checkHistory = function(data, $label) {
     var itemidcol=0,lastseencol=0,ownercol=0,
         previousOwner,previousDate,now=new Date(),
         recentsale=false,hasSales=false,difference,days,al=$(data).find('.alert-danger'),
@@ -108,7 +110,7 @@ _checkHistory = function(data, $label) {
                 hasSales = previousOwner && previousOwner != owner;
             
             if (hasSales) {
-                days = _dayDifference(lastseendate, now);
+                days = dayDifference(lastseendate, now);
                 
                 recentsale = days <= 90;
             }
@@ -164,16 +166,16 @@ _checkHistory = function(data, $label) {
     $label.replaceWith($result);
 }
 
-_dayDifference = function(d1, d2) {
+dayDifference = function(d1, d2) {
     var oneDay = 24*60*60*1000;
 
     return Math.round(Math.abs((d1.getTime() - d2.getTime())/(oneDay)))
 }
 
-_itemURL = function(id) {
+itemURL = function(id) {
     return window.location.protocol + '//' + window.location.hostname + '/item/' + id;
 }
 
 $(document).ready(function() {
-   _ready(); 
+   premiumRecentSalesReady(); 
 });

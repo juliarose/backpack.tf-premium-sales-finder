@@ -21,6 +21,9 @@ Used for quickly scanning items to find recent sales.
    * Updated to adapt newer look.
    * Items in original state are now displayed as "none" on load.
    * Premium pages with no results appear as they normally would.
+* 1.2.0 - August 26th, 2015
+   * Cleaned up code.
+   * Added auto-updater.
 
 ## Overview
 
