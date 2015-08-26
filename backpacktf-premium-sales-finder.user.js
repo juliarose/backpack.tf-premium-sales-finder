@@ -4,7 +4,7 @@
 // @author      Julia
 // @description Find recent sales for those hats :3
 // @include     /https?:\/\/backpack\.tf\/premium\/search.*/
-// @version     1.2.1
+// @version     1.2.2
 // @grant       none
 // @updateURL   https://github.com/juliarose/backpack.tf-premium-sales-finder/raw/master/backpacktf-premium-sales-finder.meta.js
 // @downloadURL https://github.com/juliarose/backpack.tf-premium-sales-finder/raw/master/backpacktf-premium-sales-finder.user.js
@@ -35,9 +35,7 @@ premiumRecentSalesReady = function() {
                 
                 $sale.append($label);
                 $this.append($sale);
-                $label.click(function() {
-                    _labelClicked($(this));
-                });
+                $label.click(labelClicked);
             } else if ($th.length) {
                 $th.each(function() {
                     if ($this.text() == 'ItemID') idcol = $this.index();
@@ -70,8 +68,8 @@ checkSales = function() {
     });
 }
 
-labelClicked = function($label) {
-    var $tr = $label.closest('tr'), id = $tr.find('td').eq(idcol).text();
+labelClicked = function() {
+    var $label = $(this), $tr = $label.closest('tr'), id = $tr.find('td').eq(idcol).text();
     
     if (id) ajax(id, $label);
 }
