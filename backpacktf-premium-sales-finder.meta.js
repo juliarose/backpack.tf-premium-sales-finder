@@ -4,7 +4,7 @@
 // @author      Julia
 // @description Find recent sales for those hats :3
 // @include     /https?:\/\/backpack\.tf\/premium\/search.*/
-// @version     1.2.1
+// @version     1.2.2
 // @grant       none
 // @updateURL   https://github.com/juliarose/backpack.tf-premium-sales-finder/raw/master/backpacktf-premium-sales-finder.meta.js
 // @downloadURL https://github.com/juliarose/backpack.tf-premium-sales-finder/raw/master/backpacktf-premium-sales-finder.user.js
