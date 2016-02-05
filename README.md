@@ -26,6 +26,10 @@ Used for quickly scanning items to find recent sales.
    * Added auto-updater.
 * 1.2.2 - August 26th, 2015
    * Fixed problem in click handler.
+* 2.0 - February 5th, 2016
+   * Updated to work with new version of backpack.tf.
+   * Added highlighters to item histories.
+   * Added quick-links to user's Outpost trades in item histories.
 
 ## Overview
 

@@ -4,54 +4,126 @@
 // @author      Julia
 // @description Find recent sales for those hats :3
 // @include     /https?:\/\/backpack\.tf\/premium\/search.*/
-// @version     1.2.2
+// @include     /https?:\/\/backpack\.tf\/item\/.*/
+// @version     2.0
 // @grant       none
 // @updateURL   https://github.com/juliarose/backpack.tf-premium-sales-finder/raw/master/backpacktf-premium-sales-finder.meta.js
 // @downloadURL https://github.com/juliarose/backpack.tf-premium-sales-finder/raw/master/backpacktf-premium-sales-finder.user.js
 // ==/UserScript==
 
-var idcol = 0, originalcol = 1;
+var outpostURL = 'http://www.tf2outpost.com';
+var colsHeads = {
+    'owner': 'User',
+    'lastseen': 'Last seen',
+    'id': 'ID',
+    'trades': 'Outpost User'
+};
+var cols = {};
+var historytableidentifier = '.history-sheet table';
+var collection = {};
+var location = window.location.href;
 
 premiumRecentSalesReady = function() {
-    var $panel = $('#page-content .panel').last(),
-        $danger = $panel.find('.label-danger'),
-        $pullRight = $panel.find('.panel-heading .pull-right'),
-        $checkSales = $('<button class="btn btn-panel btn-primary" id="show-markdown-modal"><i class="fa fa-list-ul"></i> Check exchanges</button>');
+    var $checkSales = $('<a class="btn btn-info btn-block btn-sm" id="build-search" title="Advanced">Check exchanges</a>');
+    var $everything = $('.everything-form .btn-premium').after($checkSales);
     
-    if ($danger.text().indexOf('No results found.') == -1) {
-        $panel.find('table tr').each(function() {
-            var $this = $(this),
-                $th = $this.find('th'),
-                $td = $this.find('td'),
-                $original = $td.eq(originalcol);
-            if ($td.length) {
-                var $label, $sale = $('<td class="sale" style="width:120px"/>');
-                
-                if ($original.text() === 'Yes') {
-                    $label = $('<span class="label label-danger">None</span>')
-                } else {
-                    $label = $('<a href="javascript:void(0)" class="check-sale"><span class="label label-info">Check</span></a>')
-                }
-                
-                $sale.append($label);
-                $this.append($sale);
-                $label.click(labelClicked);
-            } else if ($th.length) {
-                $th.each(function() {
-                    if ($this.text() == 'ItemID') idcol = $this.index();
-                });
-                
-                var $lastExchange = $('<th>Last Exchanged</th>');
-                $this.append($lastExchange);
-            }
-        });
+    $('.results:first .result').each(function() {
+        var $this = $(this);
+        var $item = $this.find('.item-singular .item');
+        var id = $item.data('original-id');
+        var isOriginal = false;
+        var $btn;
         
-        $pullRight.find('a').replaceWith($checkSales);
-        $checkSales.click(function() {
-            $(this).remove();
-            checkSales();
-        });
+        if (isOriginal) {
+            // it's in the original state, so it does not need to be checked
+            $btn = $('<a href="javascript:void(0)" class="btn btn-danger btn-xs">None</a>')
+        } else {
+            $btn = $('<a href="javascript:void(0)" class="btn btn-default btn-xs check-sale"><i class="fa fa-question"></i> Last Exchanged</a>');
+            $btn.click(btnClicked);
+        }
+        
+        $this.find('.buttons.btn-group').append($btn);
+    });
+    
+    $checkSales.click(function() {
+        $(this).addClass('disabled').unbind('click');
+        
+        checkSales();
+    });
+}
+
+outpostHistoryReady = function() {
+    var $tr = $(historytableidentifier + ' tr'),
+        $tds, usersteamid, itemid;
+  
+    addColumn('trades');
+    locateRows($('body'));
+    $tr.each(function() {
+        var $this = $(this);
+        
+        $tds = $this.find('td');
+        itemid = $tds.eq(cols['id']).text().trim();
+        usersteamid = $tds.eq(cols['owner']).find('.user-handle-container a').attr('data-id');
+        
+        if (itemid && usersteamid) {
+            if (collection[usersteamid]) {
+                collection[usersteamid].push(itemid);
+            } else {
+                collection[usersteamid] = [itemid]; // new array
+            }
+        }
+    });
+    
+    $tr.each(function() {
+        historyLink($(this));
+    });
+}
+
+addColumn = function(name) {
+    var $tr = $(historytableidentifier + ' tr'),
+        $lastCol = $tr.first().find('th').last(),
+        $col = $('<th/>').text(colsHeads[name]).insertAfter($lastCol); // add heading
+    
+    cols[name] = $col.index();
+    
+    $tr.each(function() {
+        var $this = $(this);
+        var $td = $this.find('td');
+        
+        // add a column
+        if ($td.length) {
+            $this.append('<td/>');
+        }
+    })
+}
+
+function historyLink($row) {
+    if ($row.find('th').length) return; // return if is a heading
+    
+    var now = new Date(),
+        $tds = $row.find('td'),
+        $usercol = $tds.eq(cols['owner']),
+        $idcol = $tds.eq(cols['id']),
+        $lastseen = $tds.eq(cols['lastseen']),
+        $tradescol = $tds.eq(cols['trades']),
+        itemid = $idcol.text().trim(),
+        lastseendate = new Date($lastseen.text());
+        itemHref = [outpostURL, 'item', '440,' + itemid].join('/'),
+        usersteamid = $usercol.find('.user-handle-container a').attr('data-id'),
+        userHref = [outpostURL, 'user', usersteamid].join('/') + '?itemid=' + collection[usersteamid].join(','),
+        $userOPLink = $('<a></a>').text('View trades')
+          .attr({ 'href': userHref,
+                  'target': '_blank' });
+    
+    var days = dayDifference(lastseendate, now);
+    
+    if (days <= 60) {
+        $row.addClass('success');
+    } else if (days <= 90) {
+        $row.addClass('warning');
     }
+    
+    $tradescol.append($userOPLink);
 }
 
 checkSales = function() {
@@ -68,13 +140,15 @@ checkSales = function() {
     });
 }
 
-labelClicked = function() {
-    var $label = $(this), $tr = $label.closest('tr'), id = $tr.find('td').eq(idcol).text();
+btnClicked = function() {
+    var $btn = $(this),
+        $item = $btn.closest('.result').find('.item-singular .item'),
+        id = $item.data('original-id');
     
-    if (id) ajax(id, $label);
+    if (id) ajax(id, $btn);
 }
 
-ajax = function(id, $label) {
+ajax = function(id, $btn) {
     $.ajax({
         type: 'GET',
         dataType: 'html',
@@ -83,85 +157,79 @@ ajax = function(id, $label) {
             var doc = document.implementation.createHTMLDocument('item'); doc.documentElement.innerHTML = response;
             var data = $(doc).find('#page-content');
             
-            checkHistory(data, $label);
+            checkHistory(data, $btn);
         }, error: function (xhr, ajaxOptions, thrownError) {
             // page failed to load
         }
     });
 }
 
-checkHistory = function(data, $label) {
-    var itemidcol=0,lastseencol=0,ownercol=0,
-        previousOwner,previousDate,now=new Date(),
-        recentsale=false,hasSales=false,difference,days,al=$(data).find('.alert-danger'),
-        duped = al.length && al.text().indexOf('duplicate') > -1,
-        gifted = $(data).find('.item-singular .gifted-item').length > 0;
+checkHistory = function(data, $btn) {
+    $btn.removeClass('btn-default').unbind('click');
     
-    $(data).find('.row').last().find('table tr').each(function() {
+    var $history = $(data), previousOwner, now = new Date(),
+        hasSales, days, $duped = $history.find('.alert.alert-warning'),
+        duped = $duped.length && $duped.text().indexOf('duplicate') > -1;
+    
+    locateRows($history);
+    
+    $history.find(historytableidentifier + ' tr').each(function() {
         var $this = $(this);
+        var $tds = $this.find('td');
         
-        if ($this.find('td').length) {
-            var lastseen = $this.find('td').eq(lastseencol),
-                owner = $this.find('td').eq(ownercol).text(),
-                lastseendate = new Date(lastseen.text()),
-                lastseenrawdate = lastseen.text();
-                hasSales = previousOwner && previousOwner != owner;
+        if ($tds.length) {
+            var $lastseen = $tds.eq(cols['lastseen']),
+                $owner = $tds.eq(cols['owner']),
+                owner = $owner.find('.user-handle-container a').data('id'), // steamid of owner
+                lastseendate, hasSales = previousOwner && previousOwner != owner;
             
             if (hasSales) {
+                lastseendate = new Date($lastseen.text());
                 days = dayDifference(lastseendate, now);
-                
-                recentsale = days <= 90;
             }
             
-            previousDate = lastseendate;
             previousOwner = owner;
-        } else if ($this.find('th').length) {
-            $this.find('th').each(function() {
-                switch ($(this).text()) {
-                    case 'Item ID':
-                        itemidcol = $(this).index();
-                        break;
-                    case 'Last Seen':
-                        lastseencol = $(this).index();
-                        break;
-                    case 'Owner':
-                        ownercol = $(this).index();
-                        break;
-                }
-            });
-        }
+        } 
         
         return !hasSales;
     });
     
-    var $result = $('<span class="label"/>'),
-        labelClass = 'label-danger',
-        text = '',
-        da = days == 1 ? 'day' : 'days';
+    var labelClass = 'btn-danger';
+    var text = 'None';
     
-    if (days || days == 0) {
-        if (days == 0) {
-            text += 'Today';
+    if (isNumber(days)) {
+        if (days > 0) {
+            text = days + ' ' + (days === 1 ? 'day' : 'days') + ' ago';
         } else {
-            text += days + ' ' + da + ' ago';
+            text = 'Today';
         }
-        
-        if (duped)  text += '*';
-        if (gifted) text += '&#176;';
-        
-        $result.html(text);
         
         if (days <= 60) {
-            labelClass = 'label-success';
+            labelClass = 'btn-success';
         } else if (days <= 90) {
-            labelClass = 'label-warning';
+            labelClass = 'btn-warning';
         }
-    } else {
-        $result.text('None');
     }
     
-    $result.addClass(labelClass);
-    $label.replaceWith($result);
+    if (duped) {
+        $btn.clone().text('Duped').addClass('btn-warning').insertAfter($btn);
+    }
+    
+    $btn.text(text).addClass(labelClass);
+}
+
+locateRows = function($data) {
+    $data.find(historytableidentifier + ' tr th').each(function() {
+        for (var k in colsHeads) {
+            if (colsHeads[k].toLowerCase() === $(this).text().toLowerCase()) {
+                cols[k] = $(this).index();
+            }
+        }
+    });
+}
+
+isNumber = function(n) {
+    return !isNaN(n);
 }
 
 dayDifference = function(d1, d2) {
@@ -175,5 +243,10 @@ itemURL = function(id) {
 }
 
 $(document).ready(function() {
-   premiumRecentSalesReady(); 
+    // premium
+    if (location.match(/https?:\/\/backpack\.tf\/premium\/search.*/)) {
+        premiumRecentSalesReady();
+    } else {
+        outpostHistoryReady();
+    }
 });
