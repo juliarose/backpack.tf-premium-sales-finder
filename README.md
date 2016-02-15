@@ -30,6 +30,8 @@ Used for quickly scanning items to find recent sales.
    * Updated to work with new version of backpack.tf.
    * Added highlighters to item histories.
    * Added quick-links to user's Outpost trades in item histories.
+* 2.1 - February 15th, 2016
+   * Updated to work with new version of backpack.tf.
 
 ## Overview
 
