@@ -5,7 +5,7 @@
 // @description Find recent sales for those hats :3
 // @include     /https?:\/\/backpack\.tf\/premium\/search.*/
 // @include     /https?:\/\/backpack\.tf\/item\/.*/
-// @version     2.1
+// @version     2.2
 // @grant       none
 // @updateURL   https://github.com/juliarose/backpack.tf-premium-sales-finder/raw/master/backpacktf-premium-sales-finder.meta.js
 // @downloadURL https://github.com/juliarose/backpack.tf-premium-sales-finder/raw/master/backpacktf-premium-sales-finder.user.js
@@ -160,7 +160,6 @@ ajax = function(id, $btn) {
             checkHistory(data, $btn);
         }, error: function (xhr, ajaxOptions, thrownError) {
             // page failed to load
-            alert('error');
         }
     });
 }
