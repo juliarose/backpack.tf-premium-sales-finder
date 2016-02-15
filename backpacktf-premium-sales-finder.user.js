@@ -5,7 +5,7 @@
 // @description Find recent sales for those hats :3
 // @include     /https?:\/\/backpack\.tf\/premium\/search.*/
 // @include     /https?:\/\/backpack\.tf\/item\/.*/
-// @version     2.0
+// @version     2.1
 // @grant       none
 // @updateURL   https://github.com/juliarose/backpack.tf-premium-sales-finder/raw/master/backpacktf-premium-sales-finder.meta.js
 // @downloadURL https://github.com/juliarose/backpack.tf-premium-sales-finder/raw/master/backpacktf-premium-sales-finder.user.js
@@ -19,7 +19,7 @@ var colsHeads = {
     'trades': 'Outpost User'
 };
 var cols = {};
-var historytableidentifier = '.history-sheet table';
+var historytableidentifier = '.history-sheet table.table';
 var collection = {};
 var location = window.location.href;
 
@@ -143,7 +143,7 @@ checkSales = function() {
 btnClicked = function() {
     var $btn = $(this),
         $item = $btn.closest('.result').find('.item-singular .item'),
-        id = $item.data('original-id');
+        id = $item.data('original_id');
     
     if (id) ajax(id, $btn);
 }
@@ -160,6 +160,7 @@ ajax = function(id, $btn) {
             checkHistory(data, $btn);
         }, error: function (xhr, ajaxOptions, thrownError) {
             // page failed to load
+            alert('error');
         }
     });
 }
