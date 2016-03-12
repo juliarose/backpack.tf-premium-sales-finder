@@ -30,12 +30,14 @@ Used for quickly scanning items to find recent sales.
    * Updated to work with new version of backpack.tf.
    * Added highlighters to item histories.
    * Added quick-links to user's Outpost trades in item histories.
-* 2.1 - February 15th, 2016
+* 2.1 & 2.2 - February 15th, 2016
    * Updated to work with new version of backpack.tf.
-
+* 2.3 (Done by The Oddball)
+   * Updated to work with new version of backpack.tf.
+   * Made script much faster.
 ## Overview
 
-![premium](/images/premium-purple-energy-trophy-belt.png?raw=true)
+![premium](http://i.oddball.tf/xZOXE.png?raw=true)
 
 Scanning for recent exchanges must be done manually. You can either click the "Check" label to check an item individually, or use the "Check exchanges for each item" shortcut in the upper right corner.
 
