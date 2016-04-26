@@ -5,7 +5,7 @@
 // @description Find recent sales for those hats :3
 // @include     /https?:\/\/backpack\.tf\/premium\/search.*/
 // @include     /https?:\/\/backpack\.tf\/item\/.*/
-// @version     2.3
+// @version     2.4
 // @grant       none
 // @updateURL   https://github.com/juliarose/backpack.tf-premium-sales-finder/raw/master/backpacktf-premium-sales-finder.meta.js
 // @downloadURL https://github.com/juliarose/backpack.tf-premium-sales-finder/raw/master/backpacktf-premium-sales-finder.user.js
@@ -25,7 +25,7 @@ var location = window.location.href;
 
 premiumRecentSalesReady = function () {
     var $checkSales = $('<a class="btn btn-info btn-block btn-sm" id="build-search" title="Advanced">Check exchanges</a>');
-    var $everything = $('.everything-form .btn-premium').after($checkSales);
+    var $everything = $('.premium-search-form .btn-premium').after($checkSales);
 
     $('.result').each(function () {
         var $this = $(this);
