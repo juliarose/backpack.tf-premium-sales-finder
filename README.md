@@ -35,6 +35,8 @@ Used for quickly scanning items to find recent sales.
 * 2.3 (Done by The Oddball)
    * Updated to work with new version of backpack.tf.
    * Made script much faster.
+* 2.4 (Done by The Oddball)
+   * Updated to work with new version of backpack.tf.
 
 ## Overview
 
