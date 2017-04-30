@@ -30,17 +30,16 @@ Used for quickly scanning items to find recent sales.
    * Updated to work with new version of backpack.tf.
    * Added highlighters to item histories.
    * Added quick-links to user's Outpost trades in item histories.
-* 2.1 - February 15th, 2016
+* 2.1 & 2.2 - February 15th, 2016
    * Updated to work with new version of backpack.tf.
+* 2.3 (Done by The Oddball)
+   * Updated to work with new version of backpack.tf.
+   * Made script much faster.
+* 2.4 (Done by The Oddball)
+   * Updated to work with new version of backpack.tf.
+* 2.5 - April 30th, 2017
+   * Removed features for premium search results.
 
 ## Overview
 
-![premium](/images/premium-purple-energy-trophy-belt.png?raw=true)
-
-Scanning for recent exchanges must be done manually. You can either click the "Check" label to check an item individually, or use the "Check exchanges for each item" shortcut in the upper right corner.
-
-Green indicates the exchange occurred in the last 60 days (very recent). Yellow indiciates between 60 and 90 days (recent). Red indicates the last exchange occurred more than 90 days ago or the item has never been exchanged.
-
-Occasionally an asterisk (*) will appear beside the number of days. This means the item is duplicated. Additionally, the number of days may be not accurate. Check with caution.
-
-If a degree symbol appears (°) this means the item is gifted.
+Adds color indicating recent sales on history pages. Also includes a URL to the user's outpost page with given ID's passed as URL parameters.
