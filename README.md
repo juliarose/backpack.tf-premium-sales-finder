@@ -1,6 +1,6 @@
 # backpack.tf Premium Recent Sales Finder
 
-Used for quickly scanning items to find recent sales.
+Modified due to being included as an official feature. Only runs on item history pages, and not on Premium search results.
 
 ## Requirements
 * [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=en) (Chrome)
