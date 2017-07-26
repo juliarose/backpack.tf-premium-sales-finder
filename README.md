@@ -39,7 +39,11 @@ Modified due to being included as an official feature. Only runs on item history
    * Updated to work with new version of backpack.tf.
 * 2.5 - April 30th, 2017
    * Removed features for premium search results.
+* 3.0 - July 25th, 2017
+   * Modified format of Javascript.
+   * Removed "Outpost Trades" column and replaced with a button link.
+   * Added links to Steam inventory at inventory time for items with logged in user in history.
 
 ## Overview
 
-Adds color indicating recent sales on history pages. Also includes a URL to the user's outpost page with given ID's passed as URL parameters.
+Adds color indicating recent sales on history pages. Adds a link to each user's outpost page with given ID's in history passed as URL parameters. Adds a link to the Steam inventory at inventory time in backpack.tf history for the logged in user.
