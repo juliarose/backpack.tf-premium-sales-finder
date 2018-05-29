@@ -43,6 +43,11 @@ Modified due to being included as an official feature. Only runs on item history
    * Modified format of Javascript.
    * Removed "Outpost Trades" column and replaced with a button link.
    * Added links to Steam inventory at inventory time for items with logged in user in history.
+* 3.1 - May 29th, 2018
+   * Fixed script not running on different subdomains/ports.
+   * Changed name of script.
+   * Cleaned up code.
+   
 
 ## Overview
 
