@@ -45,8 +45,10 @@ Modified due to being included as an official feature. Only runs on item history
    * Added links to Steam inventory at inventory time for items with logged in user in history.
 * 3.1 - May 29th, 2018
    * Fixed script not running on different subdomains/ports.
-   * Changed name of script.
+   * Changed name.
    * Cleaned up code.
+* 3.2 - May 29th, 2018
+   * Reverted name.
    
 
 ## Overview

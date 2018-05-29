@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name        backpack.tf Recent Sales History Links Highlighter
+// @name        backpack.tf Premium Recent Sales Finder
 // @namespace   http://steamcommunity.com/profiles/76561198080179568/
 // @author      Julia
 // @description Adds coloring to history pages indicating recent sales and direct link to user's outpost page
