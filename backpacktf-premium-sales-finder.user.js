@@ -4,7 +4,7 @@
 // @author      Julia
 // @description Adds coloring to history pages indicating recent sales and direct link to user's outpost page
 // @include     /^https?:\/\/(.*\.)?backpack\.tf(\:\d+)?\/item\/.*/
-// @version     3.1
+// @version     3.3
 // @grant       none
 // @run-at      document-end
 // @updateURL   https://github.com/juliarose/backpack.tf-premium-sales-finder/raw/master/backpacktf-premium-sales-finder.meta.js
@@ -125,6 +125,9 @@
         var lastseendate = new Date($columns.lastseen.text());
         var usersteamid = $columns.owner.find('.user-handle a').attr('data-id');
         var days = dayDifference(lastseendate, new Date());
+        
+        currentowner = !(prevsteamid && currentowner && usersteamid != prevsteamid); // used to detect current owner - will remain falsy after original owner has passed
+        
         var addSteamLink = Session && Session.steamid &&
             // do not show if current owner, unless there is no item name (moved to elsewhere)
             // logged in user and steamid of row must match
@@ -133,8 +136,6 @@
             (Session.steamid == prevsteamid) ||
             // duped items will have links on each row
             (isDuped && collection[Session.steamid]);
-        
-        currentowner = !(prevsteamid && currentowner && usersteamid != prevsteamid); // used to detect current owner - will remain falsy after original owner has passed
         
         addLink(outpostTradeURL(usersteamid, collection[usersteamid]), '<i class="stm stm-tf2outpost"></i>');
         

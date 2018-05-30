@@ -49,6 +49,8 @@ Modified due to being included as an official feature. Only runs on item history
    * Cleaned up code.
 * 3.2 - May 29th, 2018
    * Reverted name.
+* 3.3 - May 30th, 2018
+   * Fixed issue with Steam links.
    
 
 ## Overview
