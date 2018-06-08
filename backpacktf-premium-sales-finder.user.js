@@ -4,7 +4,7 @@
 // @author      Julia
 // @description Adds coloring to history pages indicating recent sales and direct link to user's outpost page
 // @include     /^https?:\/\/(.*\.)?backpack\.tf(\:\d+)?\/item\/.*/
-// @version     3.3
+// @version     3.4
 // @grant       none
 // @run-at      document-end
 // @updateURL   https://github.com/juliarose/backpack.tf-premium-sales-finder/raw/master/backpacktf-premium-sales-finder.meta.js
@@ -31,7 +31,6 @@
     var isDuped;
     // used with iteration
     var prevsteamid;
-    var currentowner = true;
     
     function onReady() {
         var $tr = $historytable.find('tbody tr');
@@ -126,12 +125,10 @@
         var usersteamid = $columns.owner.find('.user-handle a').attr('data-id');
         var days = dayDifference(lastseendate, new Date());
         
-        currentowner = !(prevsteamid && currentowner && usersteamid != prevsteamid); // used to detect current owner - will remain falsy after original owner has passed
-        
         var addSteamLink = Session && Session.steamid &&
             // do not show if current owner, unless there is no item name (moved to elsewhere)
             // logged in user and steamid of row must match
-            ((!currentowner || !itemname) && Session.steamid == usersteamid) ||
+            ((prevsteamid || !itemname) && Session.steamid == usersteamid) ||
             // if previous row steamid is different than logged in user
             (Session.steamid == prevsteamid) ||
             // duped items will have links on each row
