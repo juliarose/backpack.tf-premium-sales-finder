@@ -78,3 +78,10 @@
 
 ### Changed
 - Cleaned up code.
+
+## [3.7] - 2019-04-03
+### Added
+- Formatting for sales between 90-120 days old.
+
+### Fixed
+- Inventory history URLs.

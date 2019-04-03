@@ -4,7 +4,7 @@
 // @author      Julia
 // @description Adds coloring to history pages indicating recent sales and direct link to user's outpost page
 // @include     /^https?:\/\/(.*\.)?backpack\.tf(\:\d+)?\/item\/.*/
-// @version     3.6
+// @version     3.7
 // @grant       none
 // @run-at      document-end
 // @updateURL   https://github.com/juliarose/backpack.tf-premium-sales-finder/raw/master/backpacktf-premium-sales-finder.meta.js
@@ -207,7 +207,7 @@
                  */
                 inventoryHistory: (date) => {
                     return [
-                        'http://steamcommunity.com/profiles/my/inventoryhistory/?after_time=',
+                        'http://steamcommunity.com/my/inventoryhistory/?after_time=',
                         toX(date),
                         '&prev=1',
                         // for adding a filter with history bastard - https://naknak.net/tf2/historybastard/historybastard.user.js
@@ -270,8 +270,10 @@
             // add coloring depending on how long ago the hat was last sold
             if (days <= 60) {
                 $row.addClass('success');
-            } else if (days <= 120) {
+            } else if (days <= 90) {
                 $row.addClass('warning');
+            } else if (days <= 120) {
+                $row.addClass('danger');
             }
             
             // set prev steamid
