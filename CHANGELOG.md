@@ -83,5 +83,6 @@
 ### Added
 - Formatting for sales between 90-120 days old.
 
-### Fixed
-- Inventory history URLs.
+## [3.7.1] - 2019-04-03
+### Changed
+- Buyer/seller column position.

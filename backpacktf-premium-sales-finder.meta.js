@@ -4,7 +4,7 @@
 // @author      Julia
 // @description Adds coloring to history pages indicating recent sales and direct link to user's outpost page
 // @include     /^https?:\/\/(.*\.)?backpack\.tf(\:\d+)?\/item\/.*/
-// @version     3.7
+// @version     3.7.1
 // @grant       none
 // @run-at      document-end
 // @updateURL   https://github.com/juliarose/backpack.tf-premium-sales-finder/raw/master/backpacktf-premium-sales-finder.meta.js
