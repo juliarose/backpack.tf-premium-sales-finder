@@ -86,3 +86,12 @@
 ## [3.7.1] - 2019-04-03
 ### Changed
 - Buyer/seller column position.
+
+## [4.0] - 2019-04-04
+### Added
+- Now also runs on inventory pages.
+- When an inventory page is loaded, the closest times are selected according to dates in comparison URL.
+
+### Changed
+- Cleaned up code.
+- Buyer/seller column position, again.
