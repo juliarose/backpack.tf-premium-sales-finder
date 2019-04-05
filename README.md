@@ -1,7 +1,5 @@
 # backpack.tf Premium Recent Sales Finder
 
-Modified due to being included as an official feature. Only runs on item history pages, and not on Premium search results.
-
 ## Requirements
 * [Tampermonkey](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=en) (Chrome)
 * [Greasemonkey](https://addons.mozilla.org/en-us/firefox/addon/greasemonkey/) (Firefox)
@@ -14,4 +12,10 @@ Modified due to being included as an official feature. Only runs on item history
 
 ## Overview
 
-Adds color indicating recent sales on history pages. Adds a link to each user's outpost page with given ID's in history passed as URL parameters. Adds a link to the Steam inventory at inventory time in backpack.tf history for the logged in user.
+Runs on backpack.tf item history pages (e.g. [https://backpack.tf/item/220741261](https://backpack.tf/item/220741261)) and backpack.tf inventory pages (e.g. [https://backpack.tf/profiles/76561198080179568](https://backpack.tf/profiles/76561198080179568)]).
+
+## Features
+* Row highlighting indicating recent sales.
+* Link to bot.tf listing snapshots.
+* Compare links for sales.
+* When an inventory page is loaded with a special compare link, the nearest dates will be selected.
