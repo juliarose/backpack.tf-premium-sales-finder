@@ -95,3 +95,14 @@
 ### Changed
 - Cleaned up code.
 - Buyer/seller column position, again.
+
+## [4.0.1] - 2019-04-04
+### Changed
+- Cleaned up code.
+
+## [4.0.2] - 2019-04-04
+### Changed
+- Cleaned up code.
+
+### Fixed
+- Bot.tf links.

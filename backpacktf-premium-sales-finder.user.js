@@ -2,10 +2,10 @@
 // @name        backpack.tf Premium Recent Sales Finder
 // @namespace   http://steamcommunity.com/profiles/76561198080179568/
 // @author      Julia
-// @description Adds coloring to history pages indicating recent sales and direct link to user's outpost page
-// @include     /^https?:\/\/(.*\.)?backpack\.tf(\:\d+)?\/item\/.*/
+// @description Adds coloring to history pages indicating recent sales and includes compare links for sales
+// @include     /^https?:\/\/(.*\.)?backpack\.tf(\:\d+)?\/item\/\d+/
 // @include     /^https?:\/\/(.*\.)?backpack\.tf(\:\d+)?\/profiles\/\d{17}\/?$/
-// @version     4.0.1
+// @version     4.0.2
 // @grant       none
 // @run-at      document-end
 // @updateURL   https://github.com/juliarose/backpack.tf-premium-sales-finder/raw/master/backpacktf-premium-sales-finder.meta.js
@@ -20,7 +20,7 @@
         [
             // item history pages
             {
-                pattern: /^https?:\/\/(.*\.)?backpack\.tf(\:\d+)?\/item\/./,
+                pattern: /^https?:\/\/(.*\.)?backpack\.tf(\:\d+)?\/item\/\d+/,
                 fn: getHistory
             },
             // inventory pages
@@ -85,7 +85,9 @@
                 aus: data.australium ? 1 : 0,
                 ks: data.ks_tier || 0
             });
-            let queryString = Object.keys(params).map(key => `key=${encodeURIComponent(params[key])}`).join('&');
+            let queryString = Object.keys(params).map((key) => {
+                return `${key}=${encodeURIComponent(params[key])}`;
+            }).join('&');
             let url = 'https://bot.tf/stats/listings?' + queryString;
             let $pullRight = PAGE.$panelExtras.find('.pull-right');
             let $btnGroup = $('<div class="btn-group"/>');
@@ -104,7 +106,7 @@
         function addTableLinks() {
             /**
              * Get columns from history table
-             * @returns {Object} An object containing details for each column labeled by header text e.g. { 'ID': { index: 0, $header: $column } }
+             * @returns {Object} Object containing details for each column e.g. { 'ID': { index: 0, $header: $column } }
              */
             function getColumns() {
                 let columns = {}; // column elements
@@ -149,16 +151,30 @@
                     let addSteamLink = sessionSteamId &&
                         // do not show if current owner, unless there is no item name (moved elsewhere)
                         // logged in user and steamid of row must match
-                        ((prevSteamId || !itemname) && sessionSteamId == userSteamId) ||
+                        ((prevSteamId || !itemname) && (sessionSteamId == userSteamId)) ||
                         // if previous row steamid is the same as logged in user
                         (sessionSteamId == prevSteamId);
                     
-                    addLink.column(getURL.compare(prevSteamId, lastSeenDate), 'Compare', 'Buyer', 'User');
-                    addLink.column(getURL.compare(userSteamId, lastSeenDate), 'Compare', 'Seller', 'User');
+                    addLink.column(
+                        getURL.compare(prevSteamId, lastSeenDate),
+                        'Compare',
+                        'Buyer',
+                        'User'
+                    );
+                    addLink.column(
+                        getURL.compare(userSteamId, lastSeenDate),
+                        'Compare',
+                        'Seller',
+                        'User'
+                    );
                     
                     // add steam link if all conditions are met
                     if (addSteamLink) {
-                        addLink.inline(getURL.inventoryHistory(lastSeenDate), '<i class="stm stm-steam"/>', 'User');
+                        addLink.inline(
+                            getURL.inventoryHistory(lastSeenDate),
+                            '<i class="stm stm-steam"/>',
+                            'User'
+                        );
                     }
                 }
                 
@@ -176,7 +192,8 @@
                     }
                 }
                 
-                /** Get rows for each column by column name
+                /**
+                 * Get rows for each column by column name
                  * @param {Object} $row = jQuery object for row
                  * @returns {Object} Row columns mapped by column e.g. { 'ID': $td, 'User': $td }
                  */
@@ -191,8 +208,13 @@
                     return rowColumns;
                 }
                 
+                /**
+                 * Get date when item was last seen in user's inventory
+                 * @returns {Object} Date object
+                 */
                 function getLastSeenDate() {
-                    let timestamp = getValueFromURL(rowColumns['Last seen'].find('a').attr('href'), /time=(\d+)$/);
+                    let href = rowColumns['Last seen'].find('a').attr('href');
+                    let timestamp = getValueFromURL(href, /time=(\d+)$/);
                     
                     return timestamp && new Date(parseInt(timestamp) * 1000);
                 }
@@ -204,7 +226,10 @@
                  * @returns {Number} Difference
                  */
                 function dayDifference(date1, date2) {
-                    return Math.round(Math.abs((date1.getTime() - date2.getTime()) / (24 * 60 * 60 * 1000)));
+                    let oneDay = 24 * 60 * 60 * 1000;
+                    let difference = Math.abs(date1.getTime() - date2.getTime());
+                    
+                    return Math.round(difference / oneDay);
                 }
                 
                 let addLink = (function () {
@@ -259,7 +284,7 @@
                         
                         let $link = getLink(href, contents);
                         // the first row does not include a link
-                        let $td = $('<td/>').append(index === 0 ? '—————' : $link);
+                        let $td = $('<td/>').append(index === 0 ? '--------' : $link);
                         
                         $td.insertAfter(rowColumns[insertAfter]);
                         
@@ -279,13 +304,15 @@
                      */
                     function inventoryHistory(date) {
                         let itemname = PAGE.$item.attr('data-name');
+                        // for adding a filter with history bastard -
+                        // https://naknak.net/tf2/historybastard/historybastard.user.js
+                        let filter = itemname ? '#filter-' + itemname : '';
                         
                         return [
-                            'http://steamcommunity.com/my/inventoryhistory/?after_time=',
-                            toX(date),
+                            'http://steamcommunity.com/my/inventoryhistory/',
+                            '?after_time=' + toX(date),
                             '&prev=1',
-                            // for adding a filter with history bastard - https://naknak.net/tf2/historybastard/historybastard.user.js
-                            (itemname ? '#filter-' + itemname : '') 
+                            filter 
                         ].join('');
                     }
                     
@@ -296,6 +323,7 @@
                      * @returns {String} Inventory comparison URL
                      */
                     function compare(steamid, date) {
+                        // set date to beginning of day
                         date.setUTCHours(0); 
                         date.setUTCMinutes(0);
                         date.setUTCSeconds(0);
@@ -311,7 +339,8 @@
                             x,
                             '/',
                             x,
-                            // add "/0" at the end so that we can treat this compare link in a special manner when it loads
+                            // add "/nearest" so that we can treat this compare link in a special manner
+                            // 'getInventory' will be called when this link is loaded
                             '/nearest' 
                         ].join('');
                     }
@@ -330,8 +359,9 @@
                 prevSteamId = userSteamId;
             }
             
-            let columns = getColumns(); // get columns by heading text
-            let sessionSteamId = getValueFromURL(PAGE.$username.find('a').attr('href'), /\/profiles\/(\d{17})$/); // current logged in user
+            let columns = getColumns();
+            let href = PAGE.$username.find('a').attr('href');
+            let sessionSteamId = getValueFromURL(href, /\/profiles\/(\d{17})$/); // current logged in user
             let prevSteamId;
             
             PAGE.$history.find('tbody tr').each(addRowContents); // iterate to add links for each row
@@ -349,12 +379,14 @@
         const PAGE = {
             $snapshots: $('#historicalview option')
         };
-        const SNAPSHOTS = PAGE.$snapshots.map((i, el) => parseInt(el.value)).get().filter(a => a);
+        const SNAPSHOTS = PAGE.$snapshots.map((i, el) => {
+            return parseInt(el.value);
+        }).get().filter(a => a);
         
         /**
          * Get closet snapshot time according to timestamp
          * @param {Number} timestamp - Unix timestamp
-         * @param {Boolean} [before] - Whether the closest snapshot should appear before 'timestamp', otherwise 'timestamp' should appear after
+         * @param {Boolean} [before] - Whether the closest snapshot should appear before 'timestamp'
          * @param {Number} [other] - Snapshot must not be the same as this value
          * @returns {(Number|null)} Closest snapshot to date
          */
@@ -362,7 +394,7 @@
             const asc = (a, b) => (b - a); // sort ascending
             const desc = (a, b) => (a - b); // sort descending
             
-            // loop until we find the first result that is at or before the timestamp if "before" is set to true, or after if before is not set
+            // loop until we find the first result that is at or before the timestamp if "before" is set to true
             // when "before" is set, array is sorted in descending order, or ascending if not set
             return SNAPSHOTS.sort(before ? desc : asc).find((snapshot) => {
                 let isBefore = timestamp <= snapshot;
@@ -374,15 +406,19 @@
                 ) && !isOther; // snapshot must also not be the same as "other"
             }) || (before ? Math.min : Math.max)(...SNAPSHOTS);
             // default value is first or last snapshot if one did not meet conditions
-            // will probably only default to this if the time is closest to the first or last snapshot or with one-snapshot inventories 
+            // will probably only default to this if the time is closest to the first or last snapshot
+            // or with one-snapshot inventories 
         }
         
         // update the location so that each timestamp is at the closest time according to recorded inventory snapshots
         function changeLocation() {
             let pattern = /(\d{10})\/(\d{10})\/nearest$/;
-            let timestamps = location.href.match(pattern).slice(1).map(a => parseInt(a)); // should always match
-            let from = getClosestSnapshot(timestamps[0], true); // must be at or before the first date
-            let to = getClosestSnapshot(timestamps[1], false, from); // must be at or before the second date, and not the same date as 'from'
+            // should always match
+            let timestamps = location.href.match(pattern).slice(1).map(a => parseInt(a)); 
+            // must be at or before the first date
+            let from = getClosestSnapshot(timestamps[0], true); 
+            // must be at or before the second date, and not the same date as 'from'
+            let to = getClosestSnapshot(timestamps[1], false, from); 
             
             // finally update location.href using new timestamps
             location.href = location.href.replace(pattern, [from, to].join('/'));
