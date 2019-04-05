@@ -100,7 +100,7 @@
 ### Changed
 - Cleaned up code.
 
-## [4.0.2] - 2019-04-04
+## [4.0.2] - 2019-04-05
 ### Changed
 - Cleaned up code.
 
