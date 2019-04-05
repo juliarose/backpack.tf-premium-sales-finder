@@ -12,7 +12,7 @@
 
 ## Overview
 
-Runs on backpack.tf item history pages (e.g. [https://backpack.tf/item/220741261](https://backpack.tf/item/220741261)) and backpack.tf inventory pages (e.g. [https://backpack.tf/profiles/76561198080179568](https://backpack.tf/profiles/76561198080179568)]).
+Runs on backpack.tf item history pages (e.g. [https://backpack.tf/item/220741261](https://backpack.tf/item/220741261)) and backpack.tf inventory pages (e.g. [https://backpack.tf/profiles/76561198080179568](https://backpack.tf/profiles/76561198080179568)).
 
 ## Features
 * Row highlighting indicating recent sales.
