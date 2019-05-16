@@ -6,7 +6,7 @@
 // @include     /^https?:\/\/(.*\.)?backpack\.tf(\:\d+)?\/item\/\d+/
 // @include     /^https?:\/\/(.*\.)?backpack\.tf(\:\d+)?\/profiles\/\d{17}\/?$/
 // @include     /^https?:\/\/(.*\.)?backpack\.tf(\:\d+)?\/premium\/search.*/
-// @version     4.0.3
+// @version     4.0.4
 // @grant       GM_addStyle
 // @run-at      document-end
 // @updateURL   https://github.com/juliarose/backpack.tf-premium-sales-finder/raw/master/backpacktf-premium-sales-finder.meta.js
@@ -457,26 +457,26 @@
         
         function highlightRecent() {
             function highlightOwner($result, days) {
+                function prependClass($element, front) {
+                    var classes = $element.attr('class');
+                    
+                    $element.attr('class', [front, classes].join(' '));
+                }
+                
                 let $buttons = $result.find('.buttons a');
                 
                 // add coloring depending on how long ago the hat was last sold
                 if (days <= 60) {
-                    // buttons too!
-                    $buttons.removeClass('btn-default');
-                    $buttons.addClass('btn-success');
+                    prependClass($buttons, 'btn-success');
                     $result.addClass('success');
                 } else if (days <= 90) {
-                    $buttons.removeClass('btn-default');
-                    $buttons.addClass('btn-warning');
+                    prependClass($buttons, 'btn-warning');
                     $result.addClass('warning');
                 } else if (days <= 120) {
-                    $buttons.removeClass('btn-default');
-                    $buttons.addClass('btn-danger');
+                    prependClass($buttons, 'btn-danger');
                     $result.addClass('danger');
                 }
             }
-            
-            let now = new Date();
             
             PAGE.$results.each((i, el) => {
                 let $result = $(el);
@@ -485,6 +485,7 @@
                 
                 if ($time.length) {
                     let date = new Date($time.attr('title'));
+                    let now = new Date();
                     let days = dayDifference(now, date);
                     
                     highlightOwner($result, days);

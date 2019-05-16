@@ -6,7 +6,7 @@
 // @include     /^https?:\/\/(.*\.)?backpack\.tf(\:\d+)?\/item\/\d+/
 // @include     /^https?:\/\/(.*\.)?backpack\.tf(\:\d+)?\/profiles\/\d{17}\/?$/
 // @include     /^https?:\/\/(.*\.)?backpack\.tf(\:\d+)?\/premium\/search.*/
-// @version     4.0.3
+// @version     4.0.4
 // @grant       GM_addStyle
 // @run-at      document-end
 // @updateURL   https://github.com/juliarose/backpack.tf-premium-sales-finder/raw/master/backpacktf-premium-sales-finder.meta.js

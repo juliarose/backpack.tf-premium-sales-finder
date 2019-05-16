@@ -107,6 +107,10 @@
 ### Fixed
 - Bot.tf links.
 
-## [4.0.3] - 2019-04-05
+## [4.0.3] - 2019-05-16
 ### Added
 - Coloring on Premium search results.
+
+## [4.0.4] - 2019-05-16
+### Fixed
+- Fixed to work with Manic's history script.
