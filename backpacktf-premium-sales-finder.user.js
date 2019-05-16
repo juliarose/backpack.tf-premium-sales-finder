@@ -467,6 +467,8 @@
                 
                 // add coloring depending on how long ago the hat was last sold
                 if (days <= 60) {
+                    // we add it to the beginning of the classlist
+                    // because the order of classes takes priority in styling (from first to last)
                     prependClass($buttons, 'btn-success');
                     $result.addClass('success');
                 } else if (days <= 90) {
