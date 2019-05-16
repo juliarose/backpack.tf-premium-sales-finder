@@ -106,3 +106,7 @@
 
 ### Fixed
 - Bot.tf links.
+
+## [4.0.3] - 2019-04-05
+### Added
+- Coloring on Premium search results.

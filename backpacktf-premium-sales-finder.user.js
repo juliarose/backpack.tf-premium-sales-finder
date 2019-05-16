@@ -5,8 +5,9 @@
 // @description Adds coloring to history pages indicating recent sales and includes compare links for sales
 // @include     /^https?:\/\/(.*\.)?backpack\.tf(\:\d+)?\/item\/\d+/
 // @include     /^https?:\/\/(.*\.)?backpack\.tf(\:\d+)?\/profiles\/\d{17}\/?$/
-// @version     4.0.2
-// @grant       none
+// @include     /^https?:\/\/(.*\.)?backpack\.tf(\:\d+)?\/premium\/search.*/
+// @version     4.0.3
+// @grant       GM_addStyle
 // @run-at      document-end
 // @updateURL   https://github.com/juliarose/backpack.tf-premium-sales-finder/raw/master/backpacktf-premium-sales-finder.meta.js
 // @downloadURL https://github.com/juliarose/backpack.tf-premium-sales-finder/raw/master/backpacktf-premium-sales-finder.user.js
@@ -27,6 +28,11 @@
             {
                 pattern: /^https?:\/\/(.*\.)?backpack\.tf\/profiles\/\d{17}\#\!\/compare\/\d{10}\/\d{10}\/nearest/,
                 fn: getInventory
+            },
+            // premium pages
+            {
+                pattern: /^https?:\/\/(.*\.)?backpack\.tf(\:\d+)?\/premium\/search.*/,
+                fn: getPremium
             }
         ].find((mode) => {
             // will call function when something matches, then stop
@@ -59,6 +65,19 @@
      */
     function toX(date) {
         return Math.round(date.getTime() / 1000);
+    }
+    
+    /**
+     * Get difference in days between two dates
+     * @param {Object} date1 - First date
+     * @param {Object} date2 - Second date
+     * @returns {Number} Difference
+     */
+    function dayDifference(date1, date2) {
+        let oneDay = 24 * 60 * 60 * 1000;
+        let difference = Math.abs(date1.getTime() - date2.getTime());
+        
+        return Math.round(difference / oneDay);
     }
     
     // called on history pages
@@ -217,19 +236,6 @@
                     let timestamp = getValueFromURL(href, /time=(\d+)$/);
                     
                     return timestamp && new Date(parseInt(timestamp) * 1000);
-                }
-                
-                /**
-                 * Get difference in days between two dates
-                 * @param {Object} date1 - First date
-                 * @param {Object} date2 - Second date
-                 * @returns {Number} Difference
-                 */
-                function dayDifference(date1, date2) {
-                    let oneDay = 24 * 60 * 60 * 1000;
-                    let difference = Math.abs(date1.getTime() - date2.getTime());
-                    
-                    return Math.round(difference / oneDay);
                 }
                 
                 let addLink = (function () {
@@ -426,6 +432,69 @@
         
         return (function() {
             changeLocation();
+        })();
+    }
+    
+    // called on premium pages
+    function getPremium() {
+        const PAGE = {
+            $results: $('.premium-search-results .result')
+        };
+        
+        function addStyles() {
+            GM_addStyle(`
+                .premium-search-results .result.success {
+                    background-color: #dff0d8;
+                }
+                .premium-search-results .result.warning {
+                    background-color: #faf2cc;
+                }
+                .premium-search-results .result.danger {
+                    background-color: #f2dede;
+                }
+            `);
+        }
+        
+        function highlightRecent() {
+            function highlightOwner($result, days) {
+                let $buttons = $result.find('.buttons a');
+                
+                // add coloring depending on how long ago the hat was last sold
+                if (days <= 60) {
+                    // buttons too!
+                    $buttons.removeClass('btn-default');
+                    $buttons.addClass('btn-success');
+                    $result.addClass('success');
+                } else if (days <= 90) {
+                    $buttons.removeClass('btn-default');
+                    $buttons.addClass('btn-warning');
+                    $result.addClass('warning');
+                } else if (days <= 120) {
+                    $buttons.removeClass('btn-default');
+                    $buttons.addClass('btn-danger');
+                    $result.addClass('danger');
+                }
+            }
+            
+            let now = new Date();
+            
+            PAGE.$results.each((i, el) => {
+                let $result = $(el);
+                let $previousOwner = $result.find('.owners .owner').eq(1);
+                let $time = $previousOwner.find('abbr');
+                
+                if ($time.length) {
+                    let date = new Date($time.attr('title'));
+                    let days = dayDifference(now, date);
+                    
+                    highlightOwner($result, days);
+                }
+            });
+        }
+        
+        return (function() {
+            addStyles();
+            highlightRecent();
         })();
     }
     
