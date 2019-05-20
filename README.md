@@ -12,10 +12,14 @@
 
 ## Overview
 
-Runs on backpack.tf item history pages (e.g. [https://backpack.tf/item/220741261](https://backpack.tf/item/220741261)) and backpack.tf inventory pages (e.g. [https://backpack.tf/profiles/76561198080179568](https://backpack.tf/profiles/76561198080179568)).
+### Runs on
+* backpack.tf item history pages (e.g. [https://backpack.tf/item/220741261](https://backpack.tf/item/220741261))
+* backpack.tf inventory pages (e.g. [https://backpack.tf/profiles/76561198080179568](https://backpack.tf/profiles/76561198080179568))
+* Premium search pages (e.g. [https://backpack.tf/premium/search?item=Killer%20Exclusive&quality=5&particle=30](https://backpack.tf/premium/search?item=Killer%20Exclusive&quality=5&particle=30))
 
 ## Features
-* Row highlighting indicating recent sales.
+* Row highlighting on item histories indicating recent sales.
+* Row highlighting on Premium search results indicating recent sales.
 * Link to bot.tf listing snapshots.
 * Compare links for sales.
 * When an inventory page is loaded with a special compare link, the nearest dates will be selected.
