@@ -6,7 +6,7 @@
 // @include     /^https?:\/\/(.*\.)?backpack\.tf(\:\d+)?\/item\/\d+/
 // @include     /^https?:\/\/(.*\.)?backpack\.tf(\:\d+)?\/profiles\/\d{17}\/?$/
 // @include     /^https?:\/\/(.*\.)?backpack\.tf(\:\d+)?\/premium\/search.*/
-// @version     4.0.4
+// @version     4.0.5
 // @grant       GM_addStyle
 // @run-at      document-end
 // @updateURL   https://github.com/juliarose/backpack.tf-premium-sales-finder/raw/master/backpacktf-premium-sales-finder.meta.js
@@ -90,11 +90,31 @@
             $username: $('.username')
         };
         
+        /**
+         * Adds a button link to the page
+         * @param {String} text - Link text
+         * @param {String} url - URL of link
+         * @param {String} [icon='fa-search'] - The icon for the link
+         * @returns {undefined}
+         */
+        function addButton(text, url, icon = 'fa-search') {
+            let $pullRight = PAGE.$panelExtras.find('.pull-right');
+            let $btnGroup = $('<div class="btn-group"/>');
+            let $link = $(`<a class="btn btn-panel" href="${url}"><i class="fa ${icon}"></i> ${text}</a>`);
+            
+            if ($pullRight.length === 0) {
+                // add a pull-right element if one does not already exist
+                // so that we can left align this on the right of the panel
+                $pullRight = $('<div class="pull-right"/>');
+                PAGE.$panelExtras.append($pullRight);
+            }
+            
+            $btnGroup.append($link);
+            $pullRight.prepend($btnGroup);
+        }
+        
         // add bot.tf listing snapshots link to page
         function addBotTFLink() {
-            // only if an item exists on page
-            if (PAGE.$item.length === 0) return;
-            
             let data = PAGE.$item.data();
             let params = omitEmpty({
                 def: data.defindex,
@@ -108,17 +128,42 @@
                 return `${key}=${encodeURIComponent(params[key])}`;
             }).join('&');
             let url = 'https://bot.tf/stats/listings?' + queryString;
-            let $pullRight = PAGE.$panelExtras.find('.pull-right');
-            let $btnGroup = $('<div class="btn-group"/>');
-            let $link = $(`<a class="btn btn-panel" href="${url}"><i class="fa fa-search"></i> Bot.tf</a>`);
             
-            if ($pullRight.length === 0) {
-                $pullRight = $('<div class="pull-right"/>');
-                PAGE.$panelExtras.append($pullRight);
-            }
+            addButton('Bot.tf', url);
+        }
+        
+        // add marketplace link to page
+        function addMarketplaceLink() {
+            let $item = PAGE.$item;
+            let data = $item.data();
+            let $itemIcon = $item.find('.item-icon');
+            // get the war paint id from the background image
+            let backgroundImage = $itemIcon.css('background-image');
+            // matches the url for a war paint image
+            let reWarPaintPattern = /https:\/\/scrap\.tf\/img\/items\/warpaint\/(?:(?![×Þß÷þø_])[%\-'0-9a-zÀ-ÿA-z])+_(\d+)_(\d+)_(\d+)\.png/i;
+            let warPaintMatch = backgroundImage.match(reWarPaintPattern);
+            // will be in first group
+            let warPaintId = warPaintMatch ? warPaintMatch[1] : null;
+            // get the id of the wear using the name of the wear
+            let wearId = {
+                'Factory New': 1,
+                'Minimal Wear': 2,
+                'Field-Tested': 3,
+                'Well-Worn': 4,
+                'Battle Scarred': 5
+            }[data.wear_tier];
+            let params = [
+                data.defindex,
+                data.quality,
+                data.effect_id ? 'u' + data.effect_id : null,
+                wearId ? 'w' + wearId : null,
+                warPaintId ? 'pk' + warPaintId : null,
+                data.ks_tier ? 'kt-' + data.ks_tier : null,
+                !data.craftable ? 'uncraftable' : null
+            ].filter(param => param !== null);
+            let url = 'https://marketplace.tf/items/tf2/' + params.join(';');
             
-            $btnGroup.append($link);
-            $pullRight.prepend($btnGroup);
+            addButton('Marketplace.tf', url);
         }
         
         // add contents to the page
@@ -373,10 +418,13 @@
             PAGE.$history.find('tbody tr').each(addRowContents); // iterate to add links for each row
         }
         
-        return (function() {
+        addTableLinks();
+        
+        // only if an item exists on page
+        if (PAGE.$item.length > 0) {
             addBotTFLink();
-            addTableLinks();
-        })();
+            addMarketplaceLink();
+        }
     }
     
     // called on inventory pages

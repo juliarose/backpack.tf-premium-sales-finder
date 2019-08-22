@@ -114,3 +114,7 @@
 ## [4.0.4] - 2019-05-16
 ### Fixed
 - Fixed to work with Manic's history script.
+
+## [4.0.5] - 2019-08-22
+### Added
+- Marketplace.tf links.
