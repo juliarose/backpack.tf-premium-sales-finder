@@ -118,3 +118,7 @@
 ## [4.0.5] - 2019-08-22
 ### Added
 - Marketplace.tf links.
+
+## [4.0.6] - 2019-08-22
+### Added
+- Australium attribute to Marketplace.tf links, since I forgot it, silly me.
