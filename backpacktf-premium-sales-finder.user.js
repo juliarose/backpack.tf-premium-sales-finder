@@ -6,7 +6,7 @@
 // @include     /^https?:\/\/(.*\.)?backpack\.tf(\:\d+)?\/item\/\d+/
 // @include     /^https?:\/\/(.*\.)?backpack\.tf(\:\d+)?\/profiles\/\d{17}\/?$/
 // @include     /^https?:\/\/(.*\.)?backpack\.tf(\:\d+)?\/premium\/search.*/
-// @version     4.0.6
+// @version     4.0.7
 // @grant       GM_addStyle
 // @run-at      document-end
 // @updateURL   https://github.com/juliarose/backpack.tf-premium-sales-finder/raw/master/backpacktf-premium-sales-finder.meta.js
@@ -159,7 +159,7 @@
                 wearId ? 'w' + wearId : null,
                 warPaintId ? 'pk' + warPaintId : null,
                 data.ks_tier ? 'kt-' + data.ks_tier : null,
-                data.australium ? 'australium' : 0,
+                data.australium ? 'australium' : null,
                 !data.craftable ? 'uncraftable' : null
             ].filter(param => param !== null);
             let url = 'https://marketplace.tf/items/tf2/' + params.join(';');

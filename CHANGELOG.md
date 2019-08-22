@@ -122,3 +122,7 @@
 ## [4.0.6] - 2019-08-22
 ### Added
 - Australium attribute to Marketplace.tf links, since I forgot it, silly me.
+
+## [4.0.7] - 2019-08-22
+### Fixed
+- Adding 0 at the end when australium attribute is not available.
