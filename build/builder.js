@@ -64,8 +64,8 @@ function builder({scripts, directory}) {
     const deps = fs.readFileSync(getPath('deps.js'), 'utf8');
     const depsStr = 'const DEPS = ' + encloseInIIFE(deps);
     
-    const includesStr = scripts.map(({pattern}) => {
-        return '// ' + '@include'.padEnd(13, ' ') + pattern;
+    const includesStr = scripts.map(({pattern, include_pattern}) => {
+        return '// ' + '@include'.padEnd(13, ' ') + (include_pattern || pattern);
     }).join('\n');
     const metaStr = meta.replace('\'includes\';', includesStr);
     const methodsStr = scripts.map(({name}) => {

@@ -9,6 +9,7 @@
     },
     {
       "pattern": "\/^https?:\\/\\/(.*\\.)?backpack\\.tf\\/profiles\\/\\d{17}#!\\/compare\\/\\d{10}\\/\\d{10}\\/nearest\/",
+      "include_pattern": "\/^https?:\\/\\/(.*\\.)?backpack\\.tf\\/profiles\\/\\d{17}\\/?$",
       "name": "getInventory"
     },
     {
