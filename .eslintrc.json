@@ -1,0 +1,63 @@
+{
+  "env": {
+    "es6": true,
+    "browser": true
+  },
+  "extends": "eslint:recommended",
+  "rules": {
+    "jsdoc/require-description-complete-sentence": [
+      "error", {
+        "tags": ["see", "copyright"]
+      }
+    ],
+    "no-multiple-empty-lines": [
+      "error",
+      {
+        "max": 2
+      }
+    ],
+    "indent": [
+      "error",
+      4,
+      {
+        "outerIIFEBody": 0 ,
+        "SwitchCase": 1
+      }
+    ],
+    "no-empty": [
+      "error",
+      {
+        "allowEmptyCatch": true
+      }
+    ],
+    "linebreak-style": [
+      "error",
+      "unix"
+    ],
+    "quotes": [
+      "error",
+      "single"
+    ],
+    "semi": [
+      "error",
+      "always"
+    ],
+    "no-redeclare": [
+      2,
+      {
+        "builtinGlobals": true
+      }
+    ],
+    "no-console": 0,
+    "no-undef": [
+      "error"
+    ]
+  },
+  "plugins": [
+    "jsdoc"
+  ],
+  "globals": {
+    "unsafeWindow": false,
+    "GM_addStyle": false
+  }
+}

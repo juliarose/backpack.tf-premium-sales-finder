@@ -4,9 +4,7 @@
 // @version     4.0.8
 // @description Adds coloring to history pages indicating recent sales and includes compare links for sales
 // @author      Julia
-// @include     /^https?:\/\/(.*\.)?backpack\.tf(:\d+)?\/item\/\d+/
-// @include     /^https?:\/\/(.*\.)?backpack\.tf\/profiles\/\d{17}#!\/compare\/\d{10}\/\d{10}\/nearest/
-// @include     /^https?:\/\/(.*\.)?backpack\.tf(:\d+)?\/premium\/search.*/
+'includes';
 // @updateURL   https://github.com/juliarose/backpack.tf-premium-sales-finder/raw/master/backpacktf-premium-sales-finder.meta.js
 // @downloadURL https://github.com/juliarose/backpack.tf-premium-sales-finder/raw/master/backpacktf-premium-sales-finder.user.js
 // @run-at      document-end

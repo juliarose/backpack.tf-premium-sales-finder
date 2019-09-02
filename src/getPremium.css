@@ -1,0 +1,11 @@
+.premium-search-results .result.success {
+    background-color: #dff0d8;
+}
+
+.premium-search-results .result.warning {
+    background-color: #faf2cc;
+}
+
+.premium-search-results .result.danger {
+    background-color: #f2dede;
+}

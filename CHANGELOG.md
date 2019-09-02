@@ -126,3 +126,7 @@
 ## [4.0.7] - 2019-08-22
 ### Fixed
 - Adding 0 at the end when australium attribute is not available.
+
+## [4.0.8] - 2019-09-01
+### Added
+- Strange attribute to Marketplace.tf links, since I forgot this too.

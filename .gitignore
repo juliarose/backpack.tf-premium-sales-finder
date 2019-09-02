@@ -1,2 +1,6 @@
-/manual
-.eslintrc.json
+package-lock.json
+package.json
+node_modules/
+jspm_packages/
+*.komodoproject
+.komodotools
