@@ -130,3 +130,7 @@
 ## [4.0.8] - 2019-09-01
 ### Added
 - Strange attribute to Marketplace.tf links, since I forgot this too.
+
+## [4.0.9] - 2019-09-07
+### Fixed
+- Not loading on inventory pages. 

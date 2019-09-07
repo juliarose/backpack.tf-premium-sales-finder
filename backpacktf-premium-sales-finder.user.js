@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        backpack.tf Premium Recent Sales Finder
 // @namespace   http://steamcommunity.com/profiles/76561198080179568/
-// @version     4.0.8
+// @version     4.0.9
 // @description Adds coloring to history pages indicating recent sales and includes compare links for sales
 // @author      Julia
 // @include     /^https?:\/\/(.*\.)?backpack\.tf(:\d+)?\/item\/\d+/
