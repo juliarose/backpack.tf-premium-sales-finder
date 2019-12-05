@@ -1,11 +1,22 @@
-function getInventory({$}) {
+// @include /^https?:\/\/(.*\.)?backpack\.tf\/profiles\/\d{17}\/?$/
+function({$}) {
     // jquery elements
     const PAGE = {
         $snapshots: $('#historicalview option')
     };
     
     // update the location so that each timestamp is at the closest time according to recorded inventory snapshots
-    function changeLocation({$snapshots}) {
+    (function changeLocation() {
+        const reHashBangNearest = /^https?:\/\/(.*\.)?backpack\.tf\/profiles\/\d{17}#!\/compare\/\d{10}\/\d{10}\/nearest\//;
+        const isFromHashBang = Boolean(
+            reHashBangNearest.test(location.href)
+        );
+        
+        if (!isFromHashBang) {
+            // do nothing
+            return;
+        }
+        
         /**
          * Get closet snapshot time according to timestamp.
          * @param {Number[]} snapshots - Array of snapshot unix timestamps.
@@ -36,21 +47,21 @@ function getInventory({$}) {
             // or with one-snapshot inventories 
         }
         
+        const {$snapshots} = PAGE;
         // generate page snapshots
         const snapshots = $snapshots.map((i, el) => {
             return parseInt(el.value);
         }).get().filter(Boolean);
-        const pattern = /(\d{10})\/(\d{10})\/nearest$/;
+        const reNearest = /(\d{10})\/(\d{10})\/nearest$/;
         // should always match
-        const timestamps = location.href.match(pattern).slice(1).map(a => parseInt(a)); 
+        const timestamps = location.href.match(reNearest).slice(1).map(a => parseInt(a)); 
         // must be at or before the first date
         const from = getClosestSnapshot(snapshots, timestamps[0], true); 
         // must be at or before the second date, and not the same date as 'from'
         const to = getClosestSnapshot(snapshots, timestamps[1], false, from); 
         
         // finally update location.href using new timestamps
-        location.href = location.href.replace(pattern, [from, to].join('/'));
-    }
+        location.href = location.href.replace(reNearest, [from, to].join('/'));
+    }());
     
-    changeLocation(PAGE);
 }

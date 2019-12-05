@@ -1,9 +1,10 @@
-function getPremium({$, dayDifference}) {
+// @include /^https?:\/\/(.*\.)?backpack\.tf(:\d+)?\/premium\/search.*/
+function({$, dayDifference}) {
     const PAGE = {
         $results: $('.premium-search-results .result')
     };
     
-    function highlightResults($results) {
+    (function highlightResults() {
         function highlightOwner($result, days) {
             function prependClass($element, front) {
                 const classes = $element.attr('class');
@@ -28,6 +29,8 @@ function getPremium({$, dayDifference}) {
             }
         }
         
+        const {$results} = PAGE;
+        
         $results.each((i, el) => {
             const $result = $(el);
             const $previousOwner = $result.find('.owners .owner').eq(1);
@@ -41,7 +44,5 @@ function getPremium({$, dayDifference}) {
                 highlightOwner($result, days);
             }
         });
-    }
-    
-    highlightResults(PAGE.$results);
+    }());
 }

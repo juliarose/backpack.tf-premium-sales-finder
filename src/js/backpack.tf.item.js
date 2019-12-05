@@ -1,4 +1,5 @@
-function getHistory({$, omitEmpty, dayDifference}) {
+// @include /^https?:\/\/(.*\.)?backpack\.tf(:\d+)?\/item\/\d+/
+function({$, omitEmpty, dayDifference}) {
     // jquery elements
     const PAGE = {
         $history: $('.history-sheet table.table'),
@@ -8,7 +9,7 @@ function getHistory({$, omitEmpty, dayDifference}) {
     };
     
     // add contents to the page
-    function addTableLinks({$history, $item, $username}) {
+    (function addTableLinks() {
         /**
          * Get a value from a URL according to pattern.
          * @param {String} url - URL.
@@ -206,6 +207,7 @@ function getHistory({$, omitEmpty, dayDifference}) {
             return userSteamId;
         }
         
+        const {$history, $item, $username} = PAGE;
         const $rows = $history.find('tbody > tr');
         const columnDefinitions = [
             {
@@ -308,109 +310,109 @@ function getHistory({$, omitEmpty, dayDifference}) {
                 prevSteamId
             });
         });
-    }
-    
-    /**
-     * Adds a button link to the page.
-     * @param {Object} options - Options.
-     * @param {String} options.name - Link text.
-     * @param {String} options.url - URL of link.
-     * @param {String} [options.icon='fa-search'] - The icon for the link.
-     * @param {Object} $container - JQuery object for container.
-     * @returns {undefined}
-     */
-    function addButton($container, {name, url, icon}) {
-        let $pullRight = $container.find('.pull-right');
-        const $btnGroup = $('<div class="btn-group"/>');
-        const $link = $(`<a class="btn btn-panel" href="${url}"><i class="fa ${icon || 'fa-search'}"></i> ${name}</a>`);
-        
-        if ($pullRight.length === 0) {
-            // add a pull-right element if one does not already exist
-            // so that we can left align this on the right of the panel
-            $pullRight = $('<div class="pull-right"/>');
-            $container.append($pullRight);
+    }());
+    // add buttons to the page
+    (function addButtons() {
+        /**
+         * Adds a button link to the page.
+         * @param {Object} options - Options.
+         * @param {String} options.name - Link text.
+         * @param {String} options.url - URL of link.
+         * @param {String} [options.icon='fa-search'] - The icon for the link.
+         * @param {Object} $container - JQuery object for container.
+         * @returns {undefined}
+         */
+        function addButton($container, {name, url, icon}) {
+            let $pullRight = $container.find('.pull-right');
+            const $btnGroup = $('<div class="btn-group"/>');
+            const $link = $(`<a class="btn btn-panel" href="${url}"><i class="fa ${icon || 'fa-search'}"></i> ${name}</a>`);
+            
+            if ($pullRight.length === 0) {
+                // add a pull-right element if one does not already exist
+                // so that we can left align this on the right of the panel
+                $pullRight = $('<div class="pull-right"/>');
+                $container.append($pullRight);
+            }
+            
+            $btnGroup.append($link);
+            $pullRight.prepend($btnGroup);
         }
         
-        $btnGroup.append($link);
-        $pullRight.prepend($btnGroup);
-    }
-    
-    const urlGenerators = {
-        // get details for bot.tf listing snapshots link to page
-        botTF($item) {
-            const data = $item.data();
-            const params = omitEmpty({
-                def: data.defindex,
-                q: data.quality,
-                ef: data.effect_name,
-                craft: data.craftable ? 1 : 0,
-                aus: data.australium ? 1 : 0,
-                ks: data.ks_tier || 0
-            });
-            const queryString = Object.keys(params).map((key) => {
-                return `${key}=${encodeURIComponent(params[key])}`;
-            }).join('&');
-            const url = 'https://bot.tf/stats/listings?' + queryString;
-            
-            return url;
-        },
-        // add marketplace link to page
-        marketplaceTF($item) {
-            const data = $item.data();
-            const $itemIcon = $item.find('.item-icon');
-            // get the war paint id from the background image
-            const backgroundImage = $itemIcon.css('background-image');
-            // matches the url for a war paint image
-            const reWarPaintPattern = /https:\/\/scrap\.tf\/img\/items\/warpaint\/(?:(?![×Þß÷þø_])[%\-'0-9a-zÀ-ÿA-z])+_(\d+)_(\d+)_(\d+)\.png/i;
-            const warPaintMatch = backgroundImage.match(reWarPaintPattern);
-            // will be in first group
-            const warPaintId = warPaintMatch ? warPaintMatch[1] : null;
-            // get the id of the wear using the name of the wear
-            const wearId = {
-                'Factory New': 1,
-                'Minimal Wear': 2,
-                'Field-Tested': 3,
-                'Well-Worn': 4,
-                'Battle Scarred': 5
-            }[data.wear_tier];
-            const params = [
-                data.defindex,
-                data.quality,
-                data.effect_id ? 'u' + data.effect_id : null,
-                wearId ? 'w' + wearId : null,
-                warPaintId ? 'pk' + warPaintId : null,
-                data.ks_tier ? 'kt-' + data.ks_tier : null,
-                data.australium ? 'australium' : null,
-                !data.craftable ? 'uncraftable' : null,
-                // is a strange version
-                data.quality_elevated == '11' ? 'strange' : null
-            ].filter(param => param !== null);
-            const url = 'https://marketplace.tf/items/tf2/' + params.join(';');
-            
-            return url;
-        }
-    };
-    
-    addTableLinks(PAGE);
-    
-    // only if an item exists on page
-    if (PAGE.$item.length > 0) {
-        const $item = PAGE.$item;
-        const $container = PAGE.$panelExtras;
-        const generators = {
-            'Bot.tf': urlGenerators.botTF,
-            'Marketplace.tf': urlGenerators.marketplaceTF
+        const urlGenerators = {
+            // get details for bot.tf listing snapshots link to page
+            botTF($item) {
+                const data = $item.data();
+                const params = omitEmpty({
+                    def: data.defindex,
+                    q: data.quality,
+                    ef: data.effect_name,
+                    craft: data.craftable ? 1 : 0,
+                    aus: data.australium ? 1 : 0,
+                    ks: data.ks_tier || 0
+                });
+                const queryString = Object.keys(params).map((key) => {
+                    return `${key}=${encodeURIComponent(params[key])}`;
+                }).join('&');
+                const url = 'https://bot.tf/stats/listings?' + queryString;
+                
+                return url;
+            },
+            // add marketplace link to page
+            marketplaceTF($item) {
+                const data = $item.data();
+                const $itemIcon = $item.find('.item-icon');
+                // get the war paint id from the background image
+                const backgroundImage = $itemIcon.css('background-image');
+                // matches the url for a war paint image
+                const reWarPaintPattern = /https:\/\/scrap\.tf\/img\/items\/warpaint\/(?:(?![×Þß÷þø_])[%\-'0-9a-zÀ-ÿA-z])+_(\d+)_(\d+)_(\d+)\.png/i;
+                const warPaintMatch = backgroundImage.match(reWarPaintPattern);
+                // will be in first group
+                const warPaintId = warPaintMatch ? warPaintMatch[1] : null;
+                // get the id of the wear using the name of the wear
+                const wearId = {
+                    'Factory New': 1,
+                    'Minimal Wear': 2,
+                    'Field-Tested': 3,
+                    'Well-Worn': 4,
+                    'Battle Scarred': 5
+                }[data.wear_tier];
+                const params = [
+                    data.defindex,
+                    data.quality,
+                    data.effect_id ? 'u' + data.effect_id : null,
+                    wearId ? 'w' + wearId : null,
+                    warPaintId ? 'pk' + warPaintId : null,
+                    data.ks_tier ? 'kt-' + data.ks_tier : null,
+                    data.australium ? 'australium' : null,
+                    !data.craftable ? 'uncraftable' : null,
+                    // is a strange version
+                    data.quality_elevated == '11' ? 'strange' : null
+                ].filter(param => param !== null);
+                const url = 'https://marketplace.tf/items/tf2/' + params.join(';');
+                
+                return url;
+            }
         };
         
-        Object.entries(generators).forEach(([name, generator]) => {
-            // generate the button details using the generator
-            const url = generator($item);
+        // only if an item exists on page
+        if (PAGE.$item.length > 0) {
+            const $item = PAGE.$item;
+            const $container = PAGE.$panelExtras;
+            const generators = {
+                'Bot.tf': urlGenerators.botTF,
+                'Marketplace.tf': urlGenerators.marketplaceTF
+            };
             
-            // add it to the given container
-            addButton($container, {
-                name,
-                url
+            Object.entries(generators).forEach(([name, generator]) => {
+                // generate the button details using the generator
+                const url = generator($item);
+                
+                // add it to the given container
+                addButton($container, {
+                    name,
+                    url
+                });
             });
-        });
-    }
+        }
+    }());
 }
