@@ -134,3 +134,7 @@
 ## [4.0.9] - 2019-09-07
 ### Fixed
 - Not loading on inventory pages. 
+
+## [4.1.0] - 2019-12-04
+### Changed
+- Script packaging. 
