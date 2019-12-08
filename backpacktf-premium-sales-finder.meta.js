@@ -11,5 +11,5 @@
 // @grant       unsafeWindow
 // @include     /^https?:\/\/(.*\.)?backpack\.tf(:\d+)?\/item\/\d+/
 // @include     /^https?:\/\/(.*\.)?backpack\.tf(:\d+)?\/premium\/search.*/
-// @include     /^https?:\/\/(.*\.)?backpack\.tf\/profiles\/\d{17}\/?$/
+// @include     /^https?:\/\/(.*\.)?backpack\.tf\/profiles\/\d{17}/
 // ==/UserScript==

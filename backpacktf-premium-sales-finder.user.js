@@ -11,7 +11,7 @@
 // @grant       unsafeWindow
 // @include     /^https?:\/\/(.*\.)?backpack\.tf(:\d+)?\/item\/\d+/
 // @include     /^https?:\/\/(.*\.)?backpack\.tf(:\d+)?\/premium\/search.*/
-// @include     /^https?:\/\/(.*\.)?backpack\.tf\/profiles\/\d{17}\/?$/
+// @include     /^https?:\/\/(.*\.)?backpack\.tf\/profiles\/\d{17}/
 // ==/UserScript==
 
 (function() {
@@ -289,12 +289,7 @@
                         .get()
                         // then reduce into object where the key is the column's name
                         .reduce((prev, column) => {
-                            const {
-                                name,
-                                index,
-                                $header,
-                                $cells
-                            } = column;
+                            const {name, index, $header, $cells} = column;
                             
                             // assign column based on column heading text
                             prev[name] = {
@@ -512,7 +507,7 @@
         },
         {
             includes: [
-                /^https?:\/\/(.*\.)?backpack\.tf\/profiles\/\d{17}\/?$/
+                /^https?:\/\/(.*\.)?backpack\.tf\/profiles\/\d{17}/
             ],
             fn: function({$}) {
                 // jquery elements
@@ -522,10 +517,12 @@
                 
                 // update the location so that each timestamp is at the closest time according to recorded inventory snapshots
                 (function changeLocation() {
-                    const reHashBangNearest = /^https?:\/\/(.*\.)?backpack\.tf\/profiles\/\d{17}#!\/compare\/\d{10}\/\d{10}\/nearest\//;
+                    const reHashBangNearest = /^https?:\/\/(.*\.)?backpack\.tf\/profiles\/\d{17}#!\/compare\/\d{10}\/\d{10}\/nearest/;
                     const isFromHashBang = Boolean(
                         reHashBangNearest.test(location.href)
                     );
+                    
+                    console.log(isFromHashBang);
                     
                     if (!isFromHashBang) {
                         // do nothing
@@ -578,7 +575,6 @@
                     // finally update location.href using new timestamps
                     location.href = location.href.replace(reNearest, [from, to].join('/'));
                 }());
-                
             }
         }
     ];

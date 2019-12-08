@@ -1,4 +1,4 @@
-// @include /^https?:\/\/(.*\.)?backpack\.tf\/profiles\/\d{17}\/?$/
+// @include /^https?:\/\/(.*\.)?backpack\.tf\/profiles\/\d{17}/
 function({$}) {
     // jquery elements
     const PAGE = {
@@ -7,7 +7,7 @@ function({$}) {
     
     // update the location so that each timestamp is at the closest time according to recorded inventory snapshots
     (function changeLocation() {
-        const reHashBangNearest = /^https?:\/\/(.*\.)?backpack\.tf\/profiles\/\d{17}#!\/compare\/\d{10}\/\d{10}\/nearest\//;
+        const reHashBangNearest = /^https?:\/\/(.*\.)?backpack\.tf\/profiles\/\d{17}#!\/compare\/\d{10}\/\d{10}\/nearest/;
         const isFromHashBang = Boolean(
             reHashBangNearest.test(location.href)
         );
@@ -63,5 +63,4 @@ function({$}) {
         // finally update location.href using new timestamps
         location.href = location.href.replace(reNearest, [from, to].join('/'));
     }());
-    
 }

@@ -138,3 +138,7 @@
 ## [4.1.0] - 2019-12-04
 ### Changed
 - Script packaging. 
+
+## [4.1.1] - 2019-12-07
+### Fixed
+- RegExp pattern for inventory pages. 
