@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        backpack.tf Premium Recent Sales Finder
 // @namespace   http://steamcommunity.com/profiles/76561198080179568/
-// @version     4.1.0
+// @version     4.1.1
 // @description Adds coloring to history pages indicating recent sales and includes compare links for sales
 // @author      Julia
 // @updateURL   https://github.com/juliarose/backpack.tf-premium-sales-finder/raw/master/backpacktf-premium-sales-finder.meta.js
@@ -522,8 +522,6 @@
                         reHashBangNearest.test(location.href)
                     );
                     
-                    console.log(isFromHashBang);
-                    
                     if (!isFromHashBang) {
                         // do nothing
                         return;
@@ -582,7 +580,7 @@
     (function() {
         const DEPS = (function() {
             // current version number of script
-            const VERSION = '4.1.0';
+            const VERSION = '4.1.1';
             // our window object
             const WINDOW = unsafeWindow;
             
